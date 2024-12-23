@@ -8,3 +8,4 @@ class LoginRequest(BaseModel):
 
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
+"Тут ничего менять не стал все вроде норм"
