@@ -20,3 +20,5 @@ class AuthView:
                 data=token_data
             ))
 
+
+"""Добавить обработку ошибок"""
