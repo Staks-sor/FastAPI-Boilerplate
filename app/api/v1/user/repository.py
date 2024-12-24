@@ -7,6 +7,8 @@ from core.db.db import database
 from .models import UserModel, RoleModel, user_roles_table
 from .schemas.requests import UserCreateSchema
 
+"""Не совсем понимаю репозиторий """
+
 
 class UserRepository:
     def __init__(self, db=database):

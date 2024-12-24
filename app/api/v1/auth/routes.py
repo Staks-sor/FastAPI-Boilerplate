@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-
 from api.v1.auth.schemas.responses import TokenResponse
 from api.v1.auth.view import AuthView
 from api.v1.register.schemas.responses import UserNotFound
@@ -12,25 +11,22 @@ auth_router = APIRouter(
         404: {"description": "Not found", "model": UserNotFound},
         422: {"description": "Validation Error", "model": ValidationErrorResponse},
     },
-
 )
 
-auth_router.add_api_route(
-    "/token",
-    auth_views.access,
-    methods=["POST"],
-    description="User Authentication and create access token",
-    name="Authentication-AccessToken",
-    response_model_by_alias=False,
-    response_model=TokenResponse,
-)
 
-auth_router.add_api_route(
-    "/token/refresh",
-    auth_views.refresh,
-    methods=["POST"],
-    description="Create access token from refresh token",
-    name="Authentication-AccessToken-From-RefreshToken",
-    response_model_by_alias=False,
-    response_model=TokenResponse,
-)
+# Функция для добавления общих маршрутов
+def add_token_route(router: APIRouter, path: str, method: str, name: str):
+    router.add_api_route(
+        path,
+        getattr(auth_views, method),
+        methods=["POST"],
+        description=f"{name} - User Authentication and create access token",
+        name=f"Authentication-{name}",
+        response_model_by_alias=False,
+        response_model=TokenResponse,
+    )
+
+
+# Добавляем маршруты для получения токена и обновления токена с помощью функции
+add_token_route(auth_router, "/token", "access", "AccessToken")
+add_token_route(auth_router, "/token/refresh", "refresh", "AccessToken-From-RefreshToken")

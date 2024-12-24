@@ -17,21 +17,17 @@ class CheckRole:
         if not user:
             raise UnauthorizedException
 
-        if self.allowed_roles is None:
-            raise ForbiddenException
-
         roles: List[RoleModel] = user.roles
         if not roles:
             raise ForbiddenException
 
         role_names = [role.role for role in roles]
-        print(role_names)
 
-        if self.match_any:
-            if len(list(set(role_names) & set(self.allowed_roles))) > 0:
+        if self.match_any:  # Если разрешена любая роль
+            if any(role in self.allowed_roles for role in role_names):  # Пересечение
                 return True
-        else:
-            if set(role_names) >= set(self.allowed_roles):
+        else:  # Все роли пользователя должны быть в allowed_roles
+            if all(role in self.allowed_roles for role in role_names):
                 return True
 
         raise ForbiddenException
